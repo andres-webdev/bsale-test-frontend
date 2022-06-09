@@ -12,25 +12,31 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Bsale Test - Andrés Márquez</a>
-        <div class="collapse navbar-collapse ms-5" id="navbarNavDarkDropdown">
-          <div class="navbar-nav">
-            <div class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink" id="listCategories">
-                <li><a id='allProducts' class="dropdown-item text-capitalize" href="#">Todos</a></li>
-              </ul>
-            </div>
-          </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            Categorias
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" id="listCategories">
+            <li><a id='allProducts' class="dropdown-item text-capitalize" href="#">Todos</a></li>
+          </ul>
         </div>
-        <form class="d-flex" role="search" id="submit">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            Ordenar
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" id="listSetOrder">
+            <li><a id='orderByNameAsc' class="dropdown-item text-capitalize" href="#">A - Z</a></li>
+            <li><a id='orderByNameDesc' class="dropdown-item text-capitalize" href="#">Z - A</a></li>
+            <li><a id='orderByPriceAsc' class="dropdown-item text-capitalize" href="#">Menor precio</a></li>
+            <li><a id='orderByPriceDesc' class="dropdown-item text-capitalize" href="#">Mayor Precio</a></li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-warning" id="btnDiscount">Ofertas</button>
+        <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search product" aria-label="Search" id="nameProduct">
-          <button class="btn btn-outline-warning" type="submit"><i class="bi bi-search" style="font-size: 1.2rem; color: rgb(228, 234, 247);"></i></button>
         </form>
       </div>
     </nav>
-
     <div class="container mt-4">
       <div class="row row-cols-6 row-cols-lg-5 g-2 g-lg-4" id="showData">
       </div>

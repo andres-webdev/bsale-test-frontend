@@ -1,11 +1,14 @@
 const showData = document.getElementById('showData');
 const nameProduct = document.getElementById('nameProduct');
 const listCategories = document.getElementById('listCategories');
-const submitForm = document.getElementById('submit');
+const orderByNameAsc = document.getElementById('orderByNameAsc');
+const orderByNameDesc = document.getElementById('orderByNameDesc');
+const orderByPriceAsc = document.getElementById('orderByPriceAsc');
+const orderByPriceDesc = document.getElementById('orderByPriceDesc');
+const btnDiscount = document.getElementById('btnDiscount');
 
 // Endpoints
 const url = 'http://localhost:3000/api/products';
-
 const url_categories = 'http://localhost:3000/api/category';
 
 const dataProductsApi = async(url) => {
@@ -19,9 +22,43 @@ const dataProductsApi = async(url) => {
   }
 };
 
-// Mostrar todos los productos
+// Mostrar todos los productos ordenados por nombre A - Z
 
 dataProductsApi(url);
+
+// Btn mostrar los productos oredenados por nombre A - Z
+
+orderByNameAsc.addEventListener('click', () => {
+  dataProductsApi(url);
+});
+
+// Btn mostrar los productos oredenados por nombre Z - A
+
+orderByNameDesc.addEventListener('click', () => {
+
+  const urlProductOrderByName = `${url}/order/Z-A`;
+
+  dataProductsApi(urlProductOrderByName);
+});
+
+// Btn mostrar los productos oredenados por menor precio
+
+orderByPriceAsc.addEventListener('click', () => {
+
+  const urlProductByLowerPrice = `${url}/order/lowerprice`;
+  
+  dataProductsApi(urlProductByLowerPrice);
+});
+
+// Btn mostrar los productos oredenados por mayor precio
+
+orderByPriceDesc.addEventListener('click', () => {
+
+  const urlProductByHigherPrice = `${url}/order/higherprice`;
+  
+  dataProductsApi(urlProductByHigherPrice);
+});
+
 
 // Mostrar los productos que se ingresen a la barra de busqueda
 
@@ -32,13 +69,6 @@ nameProduct.addEventListener('input', (event) => {
   dataProductsApi(urlSearch);
 });
 
-submitForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const urlSearch = `${url}/${nameProduct.value}`;
-  
-  dataProductsApi(urlSearch);
-})
 
 // Mostrar productos por categoria
 
@@ -56,22 +86,51 @@ listCategories.addEventListener('click', (event) => {
   }
 });
 
+
+// Mostrar los productos en ofertas
+
+btnDiscount.addEventListener('click', () => {
+
+  const urlProductsByDiscount = `${url}/order/discount`;
+
+  dataProductsApi(urlProductsByDiscount);
+});
+
+
 function showProduct(products) {
 
     showData.innerHTML = '';
     
-    const showProducts = products.map(product => {
+    products.forEach(({ name, url_image, price, discount }) => {
 
-      const name = (product.name).toUpperCase();
-      const price = '$' + new Intl.NumberFormat().format(product.price);
+      const url = url_image ? url_image : './img/no-product-image.png';
+
+      const priceWithDiscount = '$' + new Intl.NumberFormat().format(price - (price * (discount / 100)));
+      const priceFormated = '$' + new Intl.NumberFormat().format(price);
   
-      const html = `<div class="card shadow mb-1 bg-body rounded me-3 p-2" style="width: 16.8rem;">
-                        <img src="${product.url_image}" class="card-img-top" alt="${name}" width="300px" height="250px">
-                        <div class="card-body">
-                          <h5 class="card-title text-uppercase text-start">${name}</h5>
-                          <p class="card-text text-end mb-4 fw-bold">${price}</p>
-                          <a href="#" class="btn btn-success mx-auto position-absolute bottom-0 start-50 translate-middle-x w-75 my-2">Buy</a>
-                        </div>
+      const htmlWithDiscount = `<div class="card-body">
+                                  <h5 class="card-title text-capitalize text-start fs-5" style="height: 2.5rem">${name.toLowerCase()}</h5>
+                                  <div class="bg-danger bg-opacity-50 border border-danger border-start-0 rounded mb-2" style="width: 70%">
+                                    Descuento de ${discount}%
+                                  </div>
+                                  <div class="d-flex justify-content-around">
+                                    <p class="card-text text-end fw-bold" style="font-size: 1.5rem">${priceWithDiscount}</p>
+                                    <p class="card-text text-end text-decoration-line-through me-1" style="font-size: .9rem">${priceFormated}</p>
+                                    <a href="#" class="btn btn-success" style="width: 5.8rem; height: 2.5rem">Comprar</a>
+                                  </div>
+                                </div>`;
+
+      const htmlWithOutDiscount = `<div class="card-body">
+                                    <h5 class="card-title text-capitalize text-start fs-5" style="height: 5rem">${name.toLowerCase()}</h5>
+                                    <div class="d-flex justify-content-around">
+                                      <p class="card-text text-end fw-bold" style="font-size: 1.5rem">${priceFormated}</p>
+                                      <a href="#" class="btn btn-success" style="width: 7rem; height: 2.5rem">Comprar</a>
+                                    </div>
+                                   </div>`;
+
+      const html = `<div class="card shadow mb-1 bg-${discount ? 'warning' : 'light'} rounded me-3 p-2" style="width: 16.8rem;">
+                        <img src="${url}" class="card-img-top" alt="${name}" width="300px" height="250px">
+                        ${discount ? htmlWithDiscount : htmlWithOutDiscount}
                     </div>`;
   
       showData.innerHTML += html;
@@ -103,5 +162,5 @@ function showCategories(categories){
     
     listCategories.innerHTML += html;
   });
-}
+};
 
