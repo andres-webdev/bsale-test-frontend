@@ -66,7 +66,7 @@ listCategories.addEventListener('click', (event) => {
   if (event.target.id === 'allProducts') {
     dataProductsApi(url)
   } else {
-    const urlCategoriesProducts = `${urlCategory}/${event.target.id}`
+    const urlCategoriesProducts = `${url}/category/${event.target.id}`
     dataProductsApi(urlCategoriesProducts)
   }
 })
@@ -77,6 +77,8 @@ btnDiscount.addEventListener('click', () => {
   const urlProductsByDiscount = `${url}/order/discount`
   dataProductsApi(urlProductsByDiscount)
 })
+
+// Funcion para mostrar todos los productos dependiendo de su orden
 
 function showProduct (products) {
   showData.innerHTML = ''
@@ -120,7 +122,7 @@ function showProduct (products) {
   })
 }
 
-// Lista de Categorias
+// Lista para mostrar las categorias de los productos
 
 const dataCategoryApi = async (url) => {
   try {
