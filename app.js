@@ -1,107 +1,101 @@
-const showData = document.getElementById('showData');
-const nameProduct = document.getElementById('nameProduct');
-const listCategories = document.getElementById('listCategories');
-const submitForm = document.getElementById('submit');
+import Services from './services/Services.js'
+import UserInterface from './userInterface.js'
 
-// Endpoints
-const url = 'http://localhost:3000/api/products';
+const { showProduct, showCategories } = new UserInterface()
+const services = new Services()
 
-const url_categories = 'http://localhost:3000/api/category';
+const nameProduct = document.getElementById('nameProduct')
+const listCategories = document.getElementById('listCategories')
+const orderByNameAsc = document.getElementById('orderByNameAsc')
+const orderByNameDesc = document.getElementById('orderByNameDesc')
+const orderByPriceAsc = document.getElementById('orderByPriceAsc')
+const orderByPriceDesc = document.getElementById('orderByPriceDesc')
+const btnDiscount = document.getElementById('btnDiscount')
 
-const dataProductsApi = async(url) => {
+// Mostrar todos los productos ordenados por nombre A - Z
 
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    showProduct(data);
-  } catch (error) {
-    console.log(error);
+async function showProductsByNameAsc () {
+  const products = await services.getProducts()
+  showProduct(products)
+}
+
+showProductsByNameAsc()
+
+// Btn mostrar los productos oredenados por nombre A - Z
+
+orderByNameAsc.addEventListener('click', () => {
+  showProductsByNameAsc()
+})
+
+// Btn mostrar los productos oredenados por nombre Z - A
+
+orderByNameDesc.addEventListener('click', () => {
+  async function showProductsByNameDesc () {
+    const products = await services.getProductsByNameDesc()
+    showProduct(products)
   }
-};
+  showProductsByNameDesc()
+})
 
-// Mostrar todos los productos
+// Btn mostrar los productos oredenados por menor precio
 
-dataProductsApi(url);
+orderByPriceAsc.addEventListener('click', () => {
+  async function showProductsByPriceAsc () {
+    const products = await services.getProductsByPriceAsc()
+    showProduct(products)
+  }
+  showProductsByPriceAsc()
+})
+
+// Btn mostrar los productos oredenados por mayor precio
+
+orderByPriceDesc.addEventListener('click', () => {
+  async function showProductsByPriceDesc () {
+    const products = await services.getProductsByPriceDesc()
+    showProduct(products)
+  }
+  showProductsByPriceDesc()
+})
 
 // Mostrar los productos que se ingresen a la barra de busqueda
 
 nameProduct.addEventListener('input', (event) => {
-
-  const urlSearch = `${url}/${event.target.value}`;
-  
-  dataProductsApi(urlSearch);
-});
-
-submitForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const urlSearch = `${url}/${nameProduct.value}`;
-  
-  dataProductsApi(urlSearch);
+  async function showProductsByName () {
+    const products = await services.getProductsByName(event.target.value)
+    showProduct(products)
+  }
+  showProductsByName()
 })
 
 // Mostrar productos por categoria
 
 listCategories.addEventListener('click', (event) => {
-
-  if(event.target.id === 'allProducts'){
-    
-    dataProductsApi(url);
-    
-  } else{
-
-    const urlCategoriesProducts = `${url_categories}/${event.target.id}`;
-
-    dataProductsApi(urlCategoriesProducts);
+  if (event.target.id === 'allProducts') {
+    showProductsByNameAsc()
+  } else {
+    async function showProductsByCategory () {
+      const products = await services.getProductsByCategory(event.target.id)
+      showProduct(products)
+    }
+    showProductsByCategory()
   }
-});
+})
 
-function showProduct(products) {
+// Mostrar los productos en ofertas
 
-    showData.innerHTML = '';
-    
-    const showProducts = products.map(product => {
-
-      const name = (product.name).toUpperCase();
-      const price = '$' + new Intl.NumberFormat().format(product.price);
-  
-      const html = `<div class="card shadow mb-1 bg-body rounded me-3 p-2" style="width: 16.8rem;">
-                        <img src="${product.url_image}" class="card-img-top" alt="${name}" width="300px" height="250px">
-                        <div class="card-body">
-                          <h5 class="card-title text-uppercase text-start">${name}</h5>
-                          <p class="card-text text-end mb-4 fw-bold">${price}</p>
-                          <a href="#" class="btn btn-success mx-auto position-absolute bottom-0 start-50 translate-middle-x w-75 my-2">Buy</a>
-                        </div>
-                    </div>`;
-  
-      showData.innerHTML += html;
-    });
-};
-
-
-// Lista de Categorias
-
-const dataCategoryApi = async(url) => {
-  try {
-    
-    const response = await fetch(url);
-    const data = await response.json();
-    showCategories(data);
-
-  } catch (error) {
-    console.log(error);
+btnDiscount.addEventListener('click', () => {
+  async function showProductsByDiscount () {
+    const products = await services.getProductsByDiscount()
+    showProduct(products)
   }
-};
+  showProductsByDiscount()
+})
 
-dataCategoryApi(url_categories);
+// Lista para mostrar las categorias de los productos
 
-function showCategories(categories){
-
-  categories.map(({id, name}) => {
-
-    const html = `<li><a id='${id}' class="dropdown-item text-capitalize" href="#">${name}</a></li>`;
-    
-    listCategories.innerHTML += html;
-  });
+const dataCategory = async () => {
+  const listCategories = await services.getCategory()
+  showCategories(listCategories)
 }
 
+dataCategory()
