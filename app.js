@@ -4,6 +4,7 @@ import UserInterface from './userInterface.js'
 const { showProduct, showCategories } = new UserInterface()
 const services = new Services()
 
+const searchBar = document.getElementById('searchBar')
 const nameProduct = document.getElementById('nameProduct')
 const listCategories = document.getElementById('listCategories')
 const orderByNameAsc = document.getElementById('orderByNameAsc')
@@ -59,9 +60,10 @@ orderByPriceDesc.addEventListener('click', () => {
 
 // Mostrar los productos que se ingresen a la barra de busqueda
 
-nameProduct.addEventListener('input', (event) => {
+searchBar.addEventListener('submit', (event) => {
+  event.preventDefault()
   async function showProductsByName () {
-    const products = await services.getProductsByName(event.target.value)
+    const products = await services.getProductsByName(nameProduct.value)
     showProduct(products)
   }
   showProductsByName()
