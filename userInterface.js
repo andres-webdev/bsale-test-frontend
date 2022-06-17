@@ -1,3 +1,5 @@
+import img from './img/no-product-image.png'
+
 const showData = document.getElementById('showData')
 const msgError = document.getElementById('msgError')
 const listCategories = document.getElementById('listCategories')
@@ -32,7 +34,7 @@ class UserInterface {
                                       </div>
                                      </div>`
       const html = `<div class="card shadow mb-1 bg-${discount ? 'warning' : 'light'} rounded me-3 p-2" style="width: 16.8rem;">
-                      <img src="${url_image ? url_image : './img/no-product-image.png'}" class="card-img-top" alt="${name}" width="300px" height="220px">
+                      <img src="${url_image ? url_image : img}" class="card-img-top" alt="${name}" width="300px" height="220px">
                       ${discount ? htmlWithDiscount : htmlWithOutDiscount}
                     </div>`
       showData.innerHTML += html
